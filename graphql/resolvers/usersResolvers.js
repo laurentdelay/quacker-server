@@ -23,7 +23,7 @@ const generateToken = (user) => {
 };
 
 module.exports = {
-  Query: {
+  Mutation: {
     /**
      *
      *  Connexion d'un utilisateur
@@ -62,8 +62,7 @@ module.exports = {
         token,
       };
     },
-  },
-  Mutation: {
+
     /**
      *
      *  Création d'un utilisateur

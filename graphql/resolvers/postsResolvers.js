@@ -3,6 +3,10 @@ const Post = require("../../models/Post");
 const checkAuth = require("../../util/check-auth");
 
 module.exports = {
+  Post: {
+    commentsCount: (parent) => parent.comments.length,
+    likesCount: (parent) => parent.likes.length,
+  },
   Query: {
     // récupération de l'ensemble des posts
     async getPosts() {
@@ -55,7 +59,7 @@ module.exports = {
         }
       } else {
         throw new AuthenticationError(
-          "Vous devez être connecté pour créer un post"
+          "Vous devez être connecté pour créer un post."
         );
       }
     },
@@ -90,7 +94,9 @@ module.exports = {
           }
         }
       } else {
-        throw new AuthenticationError("Vous devez être connecté");
+        throw new AuthenticationError(
+          "Vous devez être connecté pour supprimer ce post."
+        );
       }
     },
   },

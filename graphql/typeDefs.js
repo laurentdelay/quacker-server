@@ -6,6 +6,21 @@ module.exports = gql`
     body: String!
     username: String!
     createdAt: String!
+    comments: [Comment]!
+    likes: [Like]!
+    commentsCount: Int!
+    likesCount: Int!
+  }
+  type Comment {
+    id: ID!
+    body: String!
+    username: String!
+    createdAt: String!
+  }
+  type Like {
+    id: ID!
+    username: String!
+    createdAt: String!
   }
   type User {
     id: ID!
@@ -26,14 +41,21 @@ module.exports = gql`
     getPost(postId: ID!): Post
 
     # users queries
-    login(username: String!, password: String!): User!
   }
   type Mutation {
     # posts mutations
     createPost(body: String!): Post!
     deletePost(postId: ID!): String!
 
+    # comments mutations
+    addComment(postId: ID!, body: String!): Post!
+    deleteComment(postId: ID!, commentId: ID!): Post!
+
+    # likes mutations
+    likePost(postId: ID!): Post!
+
     # users mutations
+    login(username: String!, password: String!): User!
     register(registerInput: registerInput): User!
   }
 `;
