@@ -1,4 +1,4 @@
-const { AuthenticationError } = require("apollo-server");
+const { AuthenticationError, UserInputError } = require("apollo-server");
 const Post = require("../../models/Post");
 const checkAuth = require("../../util/check-auth");
 
@@ -43,28 +43,37 @@ module.exports = {
     async createPost(_, { body }, context) {
       // vérification qu'un utilisateur est connecté
       const user = checkAuth(context);
-      if (user) {
-        const newPost = new Post({
-          body,
-          username: user.username,
-          user: user.id,
-          createdAt: new Date().toISOString(),
-        });
-        try {
-          const post = await newPost.save();
-
-          return post;
-        } catch (error) {
-          throw new Error(error);
-        }
-      } else {
+      if (!user) {
         throw new AuthenticationError(
           "Vous devez être connecté pour créer un post."
         );
       }
+
+      if (body.trim() === "") {
+        throw new UserInputError("Post vide", {
+          errors: {
+            body: "Le post ne peux pas être vide.",
+          },
+        });
+      }
+
+      const newPost = new Post({
+        body,
+        username: user.username,
+        user: user.id,
+        createdAt: new Date().toISOString(),
+      });
+
+      try {
+        const post = await newPost.save();
+
+        return post;
+      } catch (error) {
+        throw new Error(error);
+      }
     },
 
-    // TODO: deletePost(postId: ID!): String!
+    // suppression d'un post
     async deletePost(_, { postId }, context) {
       // vérification qu'un utilisateur est connecté
       const user = checkAuth(context);
