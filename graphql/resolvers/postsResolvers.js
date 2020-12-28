@@ -57,6 +57,14 @@ module.exports = {
         });
       }
 
+      if (body.length > 256) {
+        throw new UserInputError("Post vide", {
+          errors: {
+            body: "Le post ne peux pas contenir plus de 256 caractères.",
+          },
+        });
+      }
+
       const newPost = new Post({
         body,
         username: user.username,
